@@ -170,7 +170,7 @@ export function compactLimitLabel(limit: UsageLimit): string {
     return '5h';
   }
   if (limit.id === 'seven_day') {
-    return '7g';
+    return '7d';
   }
   if (limit.scopeModel) {
     return limit.scopeModel.slice(0, 1).toUpperCase();

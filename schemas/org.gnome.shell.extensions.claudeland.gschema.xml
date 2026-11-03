@@ -27,6 +27,10 @@
       <default>25</default>
       <summary>Remaining percentage warning threshold</summary>
     </key>
+    <key name="notify-thresholds" type="b">
+      <default>true</default>
+      <summary>Notify when a limit crosses the warning or critical threshold</summary>
+    </key>
     <key name="critical-remaining" type="u">
       <range min="0" max="98"/>
       <default>10</default>

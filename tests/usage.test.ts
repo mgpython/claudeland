@@ -107,6 +107,17 @@ describe('formatting', () => {
         severity: 'ok',
       }),
     ).toBe('F');
+    expect(
+      compactLimitLabel({
+        id: 'seven_day',
+        label: 'Weekly · all models',
+        consumedPercent: 5,
+        remainingPercent: 95,
+        resetsAt: null,
+        scopeModel: null,
+        severity: 'ok',
+      }),
+    ).toBe('7d');
   });
 
   it('supports injected system translations without coupling the domain to GNOME', () => {

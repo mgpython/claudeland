@@ -5,6 +5,7 @@ import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/
 
 import { UsageController } from './services/usage-controller.js';
 import { DesktopCard } from './ui/desktop-card.js';
+import { UsageAlerts } from './ui/usage-alerts.js';
 import { UsageIndicator } from './ui/usage-indicator.js';
 
 export default class ClaudelandExtension extends Extension {
@@ -12,6 +13,7 @@ export default class ClaudelandExtension extends Extension {
   private controller: UsageController | null = null;
   private indicator: InstanceType<typeof UsageIndicator> | null = null;
   private desktopCard: DesktopCard | null = null;
+  private alerts: UsageAlerts | null = null;
 
   enable(): void {
     this.settings = this.getSettings();
@@ -45,6 +47,7 @@ export default class ClaudelandExtension extends Extension {
       this,
     );
 
+    this.alerts = new UsageAlerts(this.controller, this.settings);
     this.syncSurfaces();
     this.controller.start();
   }
@@ -54,6 +57,8 @@ export default class ClaudelandExtension extends Extension {
     this.indicator = null;
     this.desktopCard?.destroy();
     this.desktopCard = null;
+    this.alerts?.destroy();
+    this.alerts = null;
     this.controller?.destroy();
     this.controller = null;
 

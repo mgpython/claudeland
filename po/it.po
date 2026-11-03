@@ -208,3 +208,18 @@ msgstr "Settimanale · %s"
 
 msgid "Weekly · all models"
 msgstr "Settimanale · tutti i modelli"
+
+msgid "Claude usage is critical"
+msgstr "Utilizzo di Claude critico"
+
+msgid "Claude usage is running low"
+msgstr "Utilizzo di Claude in esaurimento"
+
+msgid "%s: %s remaining · %s"
+msgstr "%s: %s rimasto · %s"
+
+msgid "Notifications"
+msgstr "Notifiche"
+
+msgid "Notify once when a limit falls below the warning or critical threshold."
+msgstr "Notifica una volta quando un limite scende sotto la soglia di avviso o critica."
