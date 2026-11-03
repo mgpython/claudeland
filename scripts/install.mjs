@@ -1,7 +1,7 @@
 import { cp, mkdir, readFile, rm } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { homedir } from 'node:os';
-import { resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 
@@ -10,7 +10,7 @@ run('pnpm', ['build']);
 const dist = resolve(root, 'dist');
 
 const metadata = JSON.parse(await readFile(resolve(dist, 'metadata.json'), 'utf8'));
-if (metadata.uuid !== 'claudeland@fabiosm46.dev') {
+if (metadata.uuid !== 'claudeland@mgpython.github.io') {
   throw new Error('Refusing to install an extension with an unexpected UUID');
 }
 
@@ -22,7 +22,12 @@ if (!destination.startsWith(`${extensionRoot}/`)) {
 
 await mkdir(extensionRoot, { recursive: true });
 await rm(destination, { recursive: true, force: true });
-await cp(dist, destination, { recursive: true });
+// The GJS verification harnesses are build outputs, not part of the extension.
+const DEV_ONLY = new Set(['smoke-test.js', 'session-check.js']);
+await cp(dist, destination, {
+  recursive: true,
+  filter: (source) => !DEV_ONLY.has(basename(source)),
+});
 
 console.log(`Installed ${metadata.uuid} in ${destination}`);
 console.log(`Package built for GNOME Shell ${metadata['shell-version'].join(', ')}`);

@@ -9,7 +9,7 @@
 # the module path, so a second copy of the same actors collides on
 # registration.
 set -e
-UUID=claudeland@fabiosm46.dev
+UUID=claudeland@mgpython.github.io
 PROBE=uicheck@claudeland.test
 EXT_DIR="$HOME/.local/share/gnome-shell/extensions"
 STATUS=0

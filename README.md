@@ -5,6 +5,21 @@ without placing an always-on-top application over your work. It runs on any
 distribution shipping a supported GNOME Shell, under both X11 and Wayland.
 It is an independent project and is not affiliated with or endorsed by Anthropic.
 
+> [!NOTE]
+> This is mgpython's fork of [FabioSM46/claudeland](https://github.com/FabioSM46/claudeland),
+> installed under its own UUID (`claudeland@mgpython.github.io`) so an upstream
+> update cannot replace it. Changes from upstream 0.3.1:
+>
+> - desktop notifications when a limit crosses the warning or critical
+>   threshold, once per limit per reset window (toggle in Preferences);
+> - the panel text turns amber or red when any limit is in those bands;
+> - reset countdowns are recomputed every time the menu opens;
+> - the weekly limit is abbreviated `7d` instead of the Italian `7g`;
+> - `pnpm dev:install` no longer copies the GJS test harnesses.
+>
+> Install from source with `pnpm install && pnpm dev:install`, then log out and
+> back in once and run `gnome-extensions enable claudeland@mgpython.github.io`.
+
 It displays remaining capacity for:
 
 - the current five-hour usage window;
@@ -61,13 +76,13 @@ your credential.
 
 ## Install the release
 
-Download `claudeland@fabiosm46.dev.shell-extension.zip` and its `.sha256`
+Download `claudeland@mgpython.github.io.shell-extension.zip` and its `.sha256`
 companion from the
 [v0.3.1 release](https://github.com/FabioSM46/claudeland/releases/tag/v0.3.1),
 then, in the download directory, verify and install it for the current user:
 
 ```bash
-ARCHIVE=claudeland@fabiosm46.dev.shell-extension.zip
+ARCHIVE=claudeland@mgpython.github.io.shell-extension.zip
 sha256sum --check "$ARCHIVE.sha256"
 gnome-extensions install --force "$ARCHIVE"
 ```
@@ -75,7 +90,7 @@ gnome-extensions install --force "$ARCHIVE"
 Log out and back in after the first installation, then enable it:
 
 ```bash
-gnome-extensions enable claudeland@fabiosm46.dev
+gnome-extensions enable claudeland@mgpython.github.io
 ```
 
 On X11, GNOME Shell can instead be restarted with `Alt+F2`, `r`, Enter. That
@@ -85,8 +100,8 @@ back in is the only way to reload the Shell.
 Verify the installation and open preferences with:
 
 ```bash
-gnome-extensions info claudeland@fabiosm46.dev
-gnome-extensions prefs claudeland@fabiosm46.dev
+gnome-extensions info claudeland@mgpython.github.io
+gnome-extensions prefs claudeland@mgpython.github.io
 ```
 
 ## Install from source
@@ -125,8 +140,8 @@ instead be restarted with `Alt+F2`, `r`, Enter.
 ## Uninstall
 
 ```bash
-gnome-extensions disable claudeland@fabiosm46.dev
-gnome-extensions uninstall claudeland@fabiosm46.dev
+gnome-extensions disable claudeland@mgpython.github.io
+gnome-extensions uninstall claudeland@mgpython.github.io
 ```
 
 ## Commands

@@ -106,6 +106,15 @@ export default class ClaudelandPreferences extends ExtensionPreferences {
       ),
     );
 
+    behavior.add(
+      boundSwitch(
+        settings,
+        'notify-thresholds',
+        _('Notifications'),
+        _('Notify once when a limit falls below the warning or critical threshold.'),
+      ),
+    );
+
     const account = new Adw.PreferencesGroup({
       title: _('Claude account'),
       description: _('Sign-in is handled by the official Claude Code CLI.'),
@@ -130,12 +139,12 @@ export default class ClaudelandPreferences extends ExtensionPreferences {
     page.add(about);
     const sourceRow = new Adw.ActionRow({
       title: _('Source code and issue tracker'),
-      subtitle: 'github.com/FabioSM46/claudeland',
+      subtitle: 'github.com/mgpython/claudeland',
       activatable: true,
     });
     sourceRow.add_suffix(new Gtk.Image({ icon_name: 'go-next-symbolic' }));
     sourceRow.connect('activated', () => {
-      Gtk.show_uri(window, 'https://github.com/FabioSM46/claudeland', 0);
+      Gtk.show_uri(window, 'https://github.com/mgpython/claudeland', 0);
     });
     about.add(sourceRow);
   }

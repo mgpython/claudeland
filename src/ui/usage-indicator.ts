@@ -7,16 +7,20 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
+import { worstSeverity } from '../domain/alerts.js';
 import {
   compactLimitLabel,
   formatPercent,
   formatTimeRemaining,
   localizedLimitLabel,
   type UsageLimit,
+  type UsageSeverity,
 } from '../domain/usage.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
 import { setBoxLayoutVertical } from './compat.js';
 import { formatMessage, localizedError, translate as _ } from './localization.js';
+
+const TINTED_SEVERITIES: readonly UsageSeverity[] = ['warning', 'critical'];
 
 class UsageIndicatorImpl extends PanelMenu.Button {
   private readonly panelLabel: St.Label;
@@ -25,6 +29,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
   private readonly loginItem: PopupMenu.PopupMenuItem;
   private readonly popupMenu: PopupMenu.PopupMenu;
   private readonly unsubscribe: () => void;
+  private lastState: Readonly<UsageState> | null = null;
 
   constructor(
     private readonly controller: UsageController,
@@ -92,6 +97,18 @@ class UsageIndicatorImpl extends PanelMenu.Button {
     settingsItem.connectObject('activate', openPreferences, this);
     this.popupMenu.addMenuItem(settingsItem);
 
+    // Reset countdowns are relative to now: redraw them whenever the menu
+    // opens instead of showing the value computed at the last poll.
+    this.popupMenu.connectObject(
+      'open-state-changed',
+      (_menu: PopupMenu.PopupMenu, open: boolean) => {
+        if (open && this.lastState) {
+          this.renderMenu(this.lastState);
+        }
+      },
+      this,
+    );
+
     this.unsubscribe = controller.subscribe((state) => this.render(state));
   }
 
@@ -101,11 +118,13 @@ class UsageIndicatorImpl extends PanelMenu.Button {
   }
 
   private render(state: Readonly<UsageState>): void {
+    this.lastState = state;
     this.renderPanel(state);
     this.renderMenu(state);
   }
 
   private renderPanel(state: Readonly<UsageState>): void {
+    this.tintPanel(state.snapshot ? worstSeverity(state.snapshot.limits) : 'ok');
     if (!state.snapshot) {
       this.panelLabel.text = formatMessage(_('Claude %s'), state.loading ? '…' : '--');
       return;
@@ -124,6 +143,16 @@ class UsageIndicatorImpl extends PanelMenu.Button {
       state.snapshot.limits
         .map((limit) => `${compactLimitLabel(limit)} ${formatPercent(limit.remainingPercent)}`)
         .join(' · ') + suffix;
+  }
+
+  /** Colours the panel text when any limit is in the warning or critical band. */
+  private tintPanel(severity: UsageSeverity): void {
+    TINTED_SEVERITIES.forEach((level) =>
+      this.panelLabel.remove_style_class_name(`claudeland-${level}`),
+    );
+    if (severity !== 'ok') {
+      this.panelLabel.add_style_class_name(`claudeland-${severity}`);
+    }
   }
 
   private renderMenu(state: Readonly<UsageState>): void {
